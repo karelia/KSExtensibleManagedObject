@@ -44,24 +44,6 @@
 - (void)awakeFromExtensiblePropertyUndoUpdateForKey:(NSString *)key;
 
 
-#pragma mark Extensible Property Storage
-
-/*!	These two methods are called by KSExtensibleManagedObject when archiving or unarchiving
- *	the dictionary it uses in-memory. You can override them in a subclass to tweak the
- *	behaviour. e.g. To use an encoding method other than NSKeyedArchiver.
- */
-- (NSDictionary *)unarchiveExtensibleProperties:(NSData *)propertiesData;
-- (NSData *)archiveExtensibleProperties:(NSDictionary *)properties;
-
-/*!
- @method extensiblePropertiesDataKey
- @abstract Template method
- @result The key under which to store the archived representation of the extensible properties. By default this is "extensiblePropertiesData"
- @discussion Override this method to store extensible properties using a different key.
- */
-+ (NSString *)extensiblePropertiesDataKey;
-
-
 #pragma mark KVC/KVO Integration
 
 /*!
@@ -81,6 +63,24 @@
  */
 - (NSDictionary *)committedValuesForKeys:(NSArray *)keys includeExtensibleProperties:(BOOL)flag;
 - (NSDictionary *)changedValuesIncludingExtensibleProperties:(BOOL)flag;
+
+
+#pragma mark Extensible Property Storage
+
+/*!	These two methods are called by KSExtensibleManagedObject when archiving or unarchiving
+ *	the dictionary it uses in-memory. You can override them in a subclass to tweak the
+ *	behaviour. e.g. To use an encoding method other than NSKeyedArchiver.
+ */
+- (NSDictionary *)unarchiveExtensibleProperties:(NSData *)propertiesData;
+- (NSData *)archiveExtensibleProperties:(NSDictionary *)properties;
+
+/*!
+ @method extensiblePropertiesDataKey
+ @abstract Template method
+ @result The key under which to store the archived representation of the extensible properties. By default this is "extensiblePropertiesData"
+ @discussion Override this method to store extensible properties using a different key.
+ */
++ (NSString *)extensiblePropertiesDataKey;
 
 
 @end
