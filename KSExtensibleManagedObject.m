@@ -41,6 +41,8 @@
 
 #pragma mark Class Methods
 
+/*  In theory this is the same as NSManagedObject's implementation. But in practice (and maybe this was only on 10.4) I found it would sometimes return YES for unmodelled properties.
+ */
 + (BOOL)automaticallyNotifiesObserversForKey:(NSString *)key { return NO; }
 
 #pragma mark Extensible Properties
