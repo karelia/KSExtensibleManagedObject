@@ -43,11 +43,6 @@
 
 + (BOOL)automaticallyNotifiesObserversForKey:(NSString *)key { return NO; }
 
-+ (NSString *)extensiblePropertiesDataKey
-{
-	return @"extensiblePropertiesData";
-}
-
 #pragma mark Extensible Properties
 
 - (id)extensiblePropertyForKey:(NSString *)key;
@@ -137,6 +132,11 @@
 {
 	NSData *result = [NSKeyedArchiver archivedDataWithRootObject:properties];
 	return result;
+}
+
++ (NSString *)extensiblePropertiesDataKey
+{
+	return @"extensiblePropertiesData";
 }
 
 + (NSSet *)modifiedKeysBetweenDictionary:(NSDictionary *)dict1 andDictionary:(NSDictionary *)dict2
