@@ -34,7 +34,8 @@
 
 @interface KSExtensibleManagedObject (Private)
 
-- (NSMutableDictionary *)_extensibleProperties;
+- (NSMutableDictionary *)primitiveExtensibleProperties;
+
 + (NSSet *)modifiedKeysBetweenDictionary:(NSDictionary *)dict1 andDictionary:(NSDictionary *)dict2;
 - (NSDictionary *)archivedExtensibleProperties;
 
@@ -56,38 +57,38 @@
 
 - (id)extensiblePropertyForKey:(NSString *)key;
 {
-    return [[self _extensibleProperties] valueForKey:key];
+    return [[self primitiveExtensibleProperties] valueForKey:key];
 }
 
 - (NSDictionary *)extensibleProperties
 {
-	NSDictionary *result = [[[self _extensibleProperties] copy] autorelease];
+	NSDictionary *result = [[[self primitiveExtensibleProperties] copy] autorelease];
 	return result;
 }
 
 - (void)setExtensibleProperty:(id)value forKey:(NSString *)key;
 {
-    [[self _extensibleProperties] setObject:value forKey:key];
+    [[self primitiveExtensibleProperties] setObject:value forKey:key];
     
     // Archive the new properties. This has to be done every time so Core Data knows
     // that some kind of change was made.
-    [self setValue:[self archiveExtensibleProperties:[self _extensibleProperties]]
+    [self setValue:[self archiveExtensibleProperties:[self primitiveExtensibleProperties]]
             forKey:[[self class] extensiblePropertiesDataKey]];
 }
 
 - (void)removeExtensiblePropertyForKey:(NSString *)key;
 {
-    [[self _extensibleProperties] removeObjectForKey:key];
+    [[self primitiveExtensibleProperties] removeObjectForKey:key];
     
     // Archive the new properties. This has to be done every time so Core Data knows
     // that some kind of change was made.
-    [self setValue:[self archiveExtensibleProperties:[self _extensibleProperties]]
+    [self setValue:[self archiveExtensibleProperties:[self primitiveExtensibleProperties]]
             forKey:[[self class] extensiblePropertiesDataKey]];
 }
 
 - (void)awakeFromExtensiblePropertyUndoUpdateForKey:(NSString *)key; { }
 
-- (NSMutableDictionary *)_extensibleProperties;
+- (NSMutableDictionary *)primitiveExtensibleProperties;
 {
 	// Fault in the properties on-demand
 	if (!_extensibleProperties)
@@ -248,7 +249,7 @@
 				BOOL fireKVONotificiations = [self usesExtensiblePropertiesForUndefinedKey:aKey];
                 
                 if (fireKVONotificiations) [self willChangeValueForKey:aKey];
-				[[self _extensibleProperties] setValue:[replacementDictionary valueForKey:aKey]
+				[[self primitiveExtensibleProperties] setValue:[replacementDictionary valueForKey:aKey]
                                                 forKey:aKey];
                 [self awakeFromExtensiblePropertyUndoUpdateForKey:aKey];
 				if (fireKVONotificiations) [self didChangeValueForKey:aKey];
