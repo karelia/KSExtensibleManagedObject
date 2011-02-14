@@ -116,13 +116,13 @@
 	if (key)
 	{
 		NSData *data = [self valueForKey:key];
-		result = [self unarchiveExtensibleProperties:data];
+		result = [[self class] unarchiveExtensibleProperties:data];
 	}
 	
 	return result;
 }
 
-- (NSDictionary *)unarchiveExtensibleProperties:(NSData *)propertiesData
++ (NSDictionary *)unarchiveExtensibleProperties:(NSData *)propertiesData
 {
 	NSMutableDictionary *result = nil;
 	
@@ -295,7 +295,7 @@
 	NSData *extensiblePropertiesData = [committedStandardProperties valueForKey:[[self class] extensiblePropertiesDataKey]];
 	if (extensiblePropertiesData && (id)extensiblePropertiesData != [NSNull null])
 	{
-		NSDictionary *extensibleProperties = [self unarchiveExtensibleProperties:extensiblePropertiesData];
+		NSDictionary *extensibleProperties = [[self class] unarchiveExtensibleProperties:extensiblePropertiesData];
 		
 		NSDictionary *requestedExtensibleProperties = extensibleProperties;
 		if (keys)

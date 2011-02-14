@@ -78,7 +78,7 @@
  *	the dictionary it uses in-memory. You can override them in a subclass to tweak the
  *	behaviour. e.g. To use an encoding method other than NSKeyedArchiver.
  */
-- (NSDictionary *)unarchiveExtensibleProperties:(NSData *)propertiesData;
++ (NSDictionary *)unarchiveExtensibleProperties:(NSData *)propertiesData;
 - (NSData *)archiveExtensibleProperties:(NSDictionary *)properties;
 
 /*!
