@@ -79,7 +79,7 @@
  *	behaviour. e.g. To use an encoding method other than NSKeyedArchiver.
  */
 + (NSDictionary *)unarchiveExtensibleProperties:(NSData *)propertiesData;
-- (NSData *)archiveExtensibleProperties:(NSDictionary *)properties;
++ (NSData *)archiveExtensibleProperties:(NSDictionary *)properties;
 
 /*!
  @method extensiblePropertiesDataKey

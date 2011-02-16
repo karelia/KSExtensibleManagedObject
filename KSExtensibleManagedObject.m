@@ -72,7 +72,7 @@
     
     // Archive the new properties. This has to be done every time so Core Data knows
     // that some kind of change was made.
-    [self setValue:[self archiveExtensibleProperties:[self primitiveExtensibleProperties]]
+    [self setValue:[[self class] archiveExtensibleProperties:[self primitiveExtensibleProperties]]
             forKey:[[self class] extensiblePropertiesDataKey]];
 }
 
@@ -82,7 +82,7 @@
     
     // Archive the new properties. This has to be done every time so Core Data knows
     // that some kind of change was made.
-    [self setValue:[self archiveExtensibleProperties:[self primitiveExtensibleProperties]]
+    [self setValue:[[self class] archiveExtensibleProperties:[self primitiveExtensibleProperties]]
             forKey:[[self class] extensiblePropertiesDataKey]];
 }
 
@@ -138,7 +138,7 @@
 	return result;
 }
 
-- (NSData *)archiveExtensibleProperties:(NSDictionary *)properties;
++ (NSData *)archiveExtensibleProperties:(NSDictionary *)properties;
 {
 	NSData *result = [NSKeyedArchiver archivedDataWithRootObject:properties];
 	return result;
