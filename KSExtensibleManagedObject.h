@@ -90,4 +90,9 @@
 + (NSString *)extensiblePropertiesDataKey;
 
 
+#pragma mark KVO Debugging
+
++ (BOOL)isLoggingObservers;
++ (void)setLogObservers:(BOOL)flag;
+
 @end

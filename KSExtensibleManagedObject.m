@@ -339,4 +339,29 @@
 	return result;
 }
 
+#pragma mark KVO Debugging
+
+static BOOL sLogObservers = NO;
+
++ (BOOL)isLoggingObservers
+{
+    return sLogObservers;
+}
+
++ (void)setLogObservers:(BOOL)flag
+{
+    sLogObservers = flag;
+}
+
+- (void)willTurnIntoFault;
+{
+    [super willTurnIntoFault];
+    
+    if (sLogObservers && [self observationInfo])
+    {
+        NSLog(@"%@ has observers:\n%@", [self objectID], [self observationInfo]);
+    }
+}
+
+
 @end
