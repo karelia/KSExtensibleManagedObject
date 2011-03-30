@@ -343,12 +343,12 @@
 
 static BOOL sLogObservers = NO;
 
-+ (BOOL)isLoggingObservers
++ (BOOL)logsObserversWhenTurningIntoFault
 {
     return sLogObservers;
 }
 
-+ (void)setLogObservers:(BOOL)flag
++ (void)setLogsObserversWhenTurningIntoFault:(BOOL)flag
 {
     sLogObservers = flag;
 }

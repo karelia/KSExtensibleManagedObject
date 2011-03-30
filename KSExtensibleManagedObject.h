@@ -91,8 +91,10 @@
 
 
 #pragma mark KVO Debugging
+// Implements my suggestion from http://www.mikeabdullah.net/managed-object-kvo.html
+// Please DO NOT turn this on for release builds as Apple could easily break your app
++ (BOOL)logsObserversWhenTurningIntoFault;
++ (void)setLogsObserversWhenTurningIntoFault:(BOOL)flag;
 
-+ (BOOL)isLoggingObservers;
-+ (void)setLogObservers:(BOOL)flag;
 
 @end
