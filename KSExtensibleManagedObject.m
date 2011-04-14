@@ -47,6 +47,8 @@
 
 @implementation KSExtensibleManagedObject
 
+static BOOL sLogObservers = NO;
+
 #pragma mark Class Methods
 
 /*  In theory this is the same as NSManagedObject's implementation. But in practice (and maybe this was only on 10.4) I found it would sometimes return YES for unmodelled properties.
@@ -269,7 +271,13 @@
  */
 - (void)didTurnIntoFault
 {
-	[_extensibleProperties release];	_extensibleProperties = nil;
+	if (sLogObservers && [self observationInfo])
+    {
+        NSLog(@"%@ has observers:\n%@", [self objectID], [self observationInfo]);
+    }
+    
+    [_extensibleProperties release];	_extensibleProperties = nil;
+    
 	[super didTurnIntoFault];
 }
 
@@ -341,8 +349,6 @@
 
 #pragma mark KVO Debugging
 
-static BOOL sLogObservers = NO;
-
 + (BOOL)logsObserversWhenTurningIntoFault
 {
     return sLogObservers;
@@ -352,16 +358,5 @@ static BOOL sLogObservers = NO;
 {
     sLogObservers = flag;
 }
-
-- (void)willTurnIntoFault;
-{
-    [super willTurnIntoFault];
-    
-    if (sLogObservers && [self observationInfo])
-    {
-        NSLog(@"%@ has observers:\n%@", [self objectID], [self observationInfo]);
-    }
-}
-
 
 @end
