@@ -271,7 +271,7 @@ static BOOL sLogObservers = NO;
  */
 - (void)didTurnIntoFault
 {
-	if (sLogObservers && [self observationInfo])
+	if (sLogObservers && [self isDeleted] && [self observationInfo])
     {
         NSLog(@"%@ has observers:\n%@", [self objectID], [self observationInfo]);
     }
