@@ -30,7 +30,7 @@
 
 
 #import "KSExtensibleManagedObject.h"
-#import "Debug.h" // for assertions
+
 
 @interface KSExtensibleManagedObject (Private)
 
@@ -164,14 +164,12 @@ static BOOL sLogObservers = NO;
 	
 	
 	// Then run through these building a list of keys which the two dictionaries have different values for
-	NSString *aKey;
 	NSMutableSet *result = [NSMutableSet set];
 	
-	for (aKey in allKeys)
+	for (NSString *aKey in allKeys)
 	{
 		if (![[dict1 valueForKey:aKey] isEqual:[dict2 valueForKey:aKey]])
         {
-			OBASSERT(aKey);
             [result addObject:aKey];
 		}
 	}
@@ -205,7 +203,7 @@ static BOOL sLogObservers = NO;
  */
 - (void)setValue:(id)value forUndefinedKey:(NSString *)key
 {
-	OBPRECONDITION(key);
+	NSParameterAssert(key);
     
     if ([self usesExtensiblePropertiesForUndefinedKey:key])
     {
