@@ -201,7 +201,9 @@ static BOOL sLogObservers = NO;
 {
 	if ([self usesExtensiblePropertiesForUndefinedKey:key])
     {
+        [self willAccessValueForKey:key];
         id result = [self extensiblePropertyForKey:key];
+        [self didAccessValueForKey:key];
         return result;
     }
     else
