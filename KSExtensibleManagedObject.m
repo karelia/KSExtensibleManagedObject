@@ -30,7 +30,7 @@
 
 
 #import "KSExtensibleManagedObject.h"
-#import "Debug.h" // for assertions
+//#import "Debug.h" // for assertions
 
 @interface KSExtensibleManagedObject (Private)
 
@@ -40,6 +40,15 @@
 - (NSDictionary *)archivedExtensibleProperties;
 
 @end
+
+// Add dummy macros for OBxxx if they don't exist yet
+#if !defined (OBPRECONDITION)
+#   define OBPRECONDITION(x)
+#endif
+
+#if !defined(OBASSERT)
+#    define OBASSERT(x)
+#endif
 
 
 #pragma mark -
