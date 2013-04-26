@@ -218,37 +218,49 @@ static BOOL sLogObservers = NO;
     }
 }
 
+#pragma mark Core Data Integration
+
+- (void)awakeFromSnapshotEvents:(NSSnapshotEventType)flags;
+{
+    [super awakeFromSnapshotEvents:flags];
+    
+    
+    // Comparison of the old and new dictionaries in order to to send out approrpriate KVO notifications
+    // We specifically access the ivar directly to avoid faulting it in.
+    NSDictionary *replacementDictionary = [self archivedExtensibleProperties];
+    NSSet *modifiedKeys =
+    [KSExtensibleManagedObject modifiedKeysBetweenDictionary:_extensibleProperties
+                                               andDictionary:replacementDictionary];
+    
+    
+    // Change each of the modified keys in our in-memory dictionary
+    for (NSString *aKey in modifiedKeys)
+    {
+        BOOL fireKVONotificiations = [self usesExtensiblePropertiesForUndefinedKey:aKey];
+        
+        if (fireKVONotificiations) [self willChangeValueForKey:aKey];
+        [[self primitiveExtensibleProperties] setValue:[replacementDictionary valueForKey:aKey]
+                                                forKey:aKey];
+        [self awakeFromExtensiblePropertyUndoUpdateForKey:aKey];
+        if (fireKVONotificiations) [self didChangeValueForKey:aKey];
+    }
+}
+
 /*	Whenever a change to our dictionary data is made due to an undo or redo, match the changes to
- *	our in-memory dictionary
+ *	our in-memory dictionary. Only needs to be done on 10.5, as 10.6 offers a proper API.
  */
 - (void)didChangeValueForKey:(NSString *)key
 {
-	if ([key isEqualToString:[[self class] extensiblePropertiesDataKey]])
-	{
-		NSUndoManager *undoManager = [[self managedObjectContext] undoManager];
-		if ([undoManager isUndoing] || [undoManager isRedoing])
-		{
-			// Comparison of the old and new dictionaries in order to to send out approrpriate KVO notifications
-			// We specifically access the ivar directly to avoid faulting it in.
-			NSDictionary *replacementDictionary = [self archivedExtensibleProperties];
-			NSSet *modifiedKeys =
-            [KSExtensibleManagedObject modifiedKeysBetweenDictionary:_extensibleProperties
-                                                       andDictionary:replacementDictionary];
-			
-			
-			// Change each of the modified keys in our in-memory dictionary
-			NSString *aKey;
-			for (aKey in modifiedKeys)
-			{
-				BOOL fireKVONotificiations = [self usesExtensiblePropertiesForUndefinedKey:aKey];
-                
-                if (fireKVONotificiations) [self willChangeValueForKey:aKey];
-				[[self primitiveExtensibleProperties] setValue:[replacementDictionary valueForKey:aKey]
-                                                forKey:aKey];
-                [self awakeFromExtensiblePropertyUndoUpdateForKey:aKey];
-				if (fireKVONotificiations) [self didChangeValueForKey:aKey];
-			}
-		}
+	if (![NSManagedObject instancesRespondToSelector:@selector(awakeFromSnapshotEvents:)])
+    {
+        if ([key isEqualToString:self.class.extensiblePropertiesDataKey])
+        {
+		    NSUndoManager *undoManager = self.managedObjectContext.undoManager;
+            if (undoManager.isUndoing || undoManager.isRedoing)
+            {
+                [self awakeFromSnapshotEvents:NSSnapshotEventUndoUpdate];
+            }
+        }
 	}
 	
 	
@@ -256,8 +268,6 @@ static BOOL sLogObservers = NO;
 	// earlier -willChangeValueForKey: that must have ocurred.
 	[super didChangeValueForKey:key];
 }
-
-#pragma mark Core Data Integration
 
 /*	Throw away our internal dictionary just like normal Core Data faulting behavior.
  */
