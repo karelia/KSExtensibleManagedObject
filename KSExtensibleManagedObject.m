@@ -31,6 +31,13 @@
 
 #import "KSExtensibleManagedObject.h"
 
+#if !__has_feature(objc_arc)
+#   define KSEXTENSIBLEMANAGEDOBJECT_AUTORELEASE(x) ([(x) autorelease])
+#   define KSEXTENSIBLEMANAGEDOBJECT_RELEASE(x) ([(x) release])
+#else
+#   define KSEXTENSIBLEMANAGEDOBJECT_AUTORELEASE(x) (x)
+#   define KSEXTENSIBLEMANAGEDOBJECT_RELEASE(x) (x)
+#endif
 
 @interface KSExtensibleManagedObject (Private)
 
@@ -58,7 +65,7 @@ static BOOL sLogObservers = NO;
 
 - (NSDictionary *)extensibleProperties
 {
-	NSDictionary *result = [[[self primitiveExtensibleProperties] copy] autorelease];
+	NSDictionary *result = KSEXTENSIBLEMANAGEDOBJECT_AUTORELEASE([[self primitiveExtensibleProperties] copy]);
 	return result;
 }
 
@@ -169,7 +176,7 @@ static BOOL sLogObservers = NO;
 	}
 	
 	// Tidy up
-	[allKeys release];
+	KSEXTENSIBLEMANAGEDOBJECT_RELEASE(allKeys);
 	
 	return result;
 }
@@ -278,7 +285,7 @@ static BOOL sLogObservers = NO;
         NSLog(@"%@ has observers:\n%@", [self objectID], [self observationInfo]);
     }
     
-    [_extensibleProperties release];	_extensibleProperties = nil;
+    KSEXTENSIBLEMANAGEDOBJECT_RELEASE(_extensibleProperties);	_extensibleProperties = nil;
     
 	[super didTurnIntoFault];
 }
@@ -329,13 +336,13 @@ static BOOL sLogObservers = NO;
 	
 	
 	// Tidy up
-	NSDictionary *result = [[buffer copy] autorelease];
+	NSDictionary *result = KSEXTENSIBLEMANAGEDOBJECT_AUTORELEASE([buffer copy]);
 	return result;
 }
 
 - (NSDictionary *)changedValuesIncludingExtensibleProperties:(BOOL)flag
 {
-	NSMutableDictionary *result = [[[self changedValues] mutableCopy] autorelease];
+	NSMutableDictionary *result = KSEXTENSIBLEMANAGEDOBJECT_AUTORELEASE([[self changedValues] mutableCopy]);
 	
 	
 	// If interested in extensible properties, replace the archived data with unarchived version
