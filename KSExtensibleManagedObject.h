@@ -45,7 +45,7 @@
  @param key The key to lookup. Must not be `nil`.
  @result The value corresponding to `key`. Might be `nil`.
  */
-- (id)extensiblePropertyForKey:(NSString *)key;
+- (id)extensiblePropertyForKey:(NSString *)key __attribute((nonnull(1)));
 
 /**
  Retrieves a copy of the extensible properties store.
@@ -60,14 +60,14 @@
  @param value The value to store. Should not be `nil`.
  @param key The key to store. Must not be `nil`.
  */
-- (void)setExtensibleProperty:(id)value forKey:(NSString *)key;
+- (void)setExtensibleProperty:(id)value forKey:(NSString *)key __attribute((nonnull(1,2)));
 
 /**
  Removes an extensible property.
  
  @param key The key to remove from the extensible properties store. Must not be `nil`.
  */
-- (void)removeExtensiblePropertyForKey:(NSString *)key;
+- (void)removeExtensiblePropertyForKey:(NSString *)key __attribute((nonnull(1)));
 
 /**
  Invoked automatically when an extensible properties is reset due to an undo or redo state change.
@@ -77,7 +77,7 @@
  
  @param key The key for whose values has changed.
  */
-- (void)awakeFromExtensiblePropertyUndoUpdateForKey:(NSString *)key;
+- (void)awakeFromExtensiblePropertyUndoUpdateForKey:(NSString *)key __attribute((nonnull(1)));
 
 
 #pragma mark KVC/KVO Integration
@@ -95,7 +95,7 @@
  @param key The key being queried.
  @result Default implementation returns `NO` for all keys.
  */
-- (BOOL)usesExtensiblePropertiesForUndefinedKey:(NSString *)key;
+- (BOOL)usesExtensiblePropertiesForUndefinedKey:(NSString *)key __attribute((nonnull(1)));
 
 
 #pragma mark Core Data Integration
