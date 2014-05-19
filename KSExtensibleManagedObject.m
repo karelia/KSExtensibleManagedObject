@@ -94,8 +94,21 @@ static BOOL sLogObservers = NO;
 	// Fault in the properties on-demand
 	if (!_extensibleProperties)
 	{
-		_extensibleProperties = [[NSMutableDictionary alloc] initWithDictionary:self.archivedExtensibleProperties];
-        NSAssert(_extensibleProperties, @"-initWithDictionary: let me down");
+        @try {
+            _extensibleProperties = [[NSMutableDictionary alloc] initWithDictionary:self.archivedExtensibleProperties];
+            NSAssert(_extensibleProperties, @"-initWithDictionary: let me down");
+        }
+        @catch (NSException *exception) {
+            // Catch and handle the exception by resetting properties to be empty. But then rethrow
+            // the exception since the reset is only desirable if client code catches the exception
+            // itself and chooses to proceed.
+            if ([exception.name isEqualToString:NSInconsistentArchiveException]) {
+                NSLog(@"Resetting extensible properties after failure to unarchive: %@", self);
+                _extensibleProperties = [[NSMutableDictionary alloc] init];
+            }
+
+            @throw exception;
+        }
 	}
 	
 	return _extensibleProperties;
