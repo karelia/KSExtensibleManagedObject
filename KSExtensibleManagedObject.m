@@ -94,12 +94,8 @@ static BOOL sLogObservers = NO;
 	// Fault in the properties on-demand
 	if (!_extensibleProperties)
 	{
-		_extensibleProperties = [[self archivedExtensibleProperties] mutableCopy];
-		
-		if (!_extensibleProperties)
-		{
-			_extensibleProperties = [[NSMutableDictionary alloc] init];
-		}
+		_extensibleProperties = [[NSMutableDictionary alloc] initWithDictionary:self.archivedExtensibleProperties];
+        NSAssert(_extensibleProperties, @"-initWithDictionary: let me down");
 	}
 	
 	return _extensibleProperties;
