@@ -251,6 +251,8 @@ static BOOL sLogObservers = NO;
     }
 }
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_6
+
 /*	Whenever a change to our dictionary data is made due to an undo or redo, match the changes to
  *	our in-memory dictionary. Only needs to be done on 10.5, as 10.6 offers a proper API.
  */
@@ -273,6 +275,8 @@ static BOOL sLogObservers = NO;
 	// earlier -willChangeValueForKey: that must have ocurred.
 	[super didChangeValueForKey:key];
 }
+
+#endif
 
 /*	Throw away our internal dictionary just like normal Core Data faulting behavior.
  */
