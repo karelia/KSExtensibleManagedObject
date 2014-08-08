@@ -99,6 +99,7 @@ static BOOL sLogObservers = NO;
             NSAssert(_extensibleProperties, @"-initWithDictionary: let me down");
         }
         @catch (NSException *exception) {
+#if !TARGET_OS_IPHONE
             // Catch and handle the exception by resetting properties to be empty. But then rethrow
             // the exception since the reset is only desirable if client code catches the exception
             // itself and chooses to proceed.
@@ -106,6 +107,7 @@ static BOOL sLogObservers = NO;
                 NSLog(@"Resetting extensible properties after failure to unarchive: %@", self);
                 _extensibleProperties = [[NSMutableDictionary alloc] init];
             }
+#endif
 
             @throw exception;
         }
